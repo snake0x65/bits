@@ -1,6 +1,11 @@
 #!/bin/python
 
-num  = input()
+num  = input("val->  ")
+
+if num > 0xffffffff:
+    print("No more then 32 bits, please")
+    exit(-1)
+
 output = ""
 formated = "  "
 
@@ -9,10 +14,8 @@ while num>0:
     num = (num/2)
 
 output = output[::-1]
-
 while len(output)<32:
     output = output + "0"
-
 output = output[::-1]
 
 for x in range(32):
