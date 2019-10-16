@@ -34,7 +34,8 @@ cbits = list()
 try:
     opts, args = getopt.getopt(argv, 'b:o:x:d:s:c:', ['bin', 'oct', 'hex', 'dec', 'set', 'clear'])
     if len(opts) == 0 or len(opts) > 3:
-        print ('usage: bits.py -{b,o,x,d,s,c} <value>')
+        print ('Usage: bits.py -{b,o,x,d} <value> -{s,c) <bit,bit,bit,...>')
+        print ('Example: bits.py -x FF00FF00 -s 0,1,2 -c 31,24,6')
         sys.exit(-1)
     else:
         for opt, arg in opts:
