@@ -23,33 +23,57 @@ import getopt
 
 argv = sys.argv[1:]
 num = 0
+tmp = 0
 base = 10
+opcode = 0
 MAX = 0xffffffff
 output = ""
 formated = "  "
+bits = list()
 
 try:
     # define the getopt parameters
-    opts, args = getopt.getopt(argv, 'b:o:x:d:', ['bin', 'oct', 'hex', 'dec'])
+    opts, args = getopt.getopt(argv, 'b:o:x:d:s:c:', ['bin', 'oct', 'hex', 'dec', 'set', 'clear'])
     # check parameters
-    if len(opts) == 0 or len(opts) > 1:
-      print ('usage: bits.py -{b,o,x,d} <value>')
+    if len(opts) == 0 or len(opts) > 2:
+        print ('usage: bits.py -{b,o,x,d,s,c} <value>')
+        sys.exit(-1)
     else:
-      # iterate the options and get the corresponding values
-      for opt, arg in opts:
-        if opt == '-b':
-            base = 2
-        elif opt == '-o':
-            base = 8
-        elif opt == '-x':
-            base = 16
-        elif opt == '-d':
-            base = 10
-except getopt.GetoptError:
-    print ('usage: bits.py -{b,o,x,d} <value>')
-    sys.exit(2)
+        # iterate the options and get the corresponding values
+        for opt, arg in opts:
+            if opt == '-b':
+                base = 2
+                tmp = arg
+            elif opt == '-o':
+                base = 8
+                tmp = arg
+            elif opt == '-x':
+                base = 16
+                tmp = arg
+            elif opt == '-d':
+                base = 10
+                tmp = arg
+            elif opt == '-s':
+                bits = list(arg.split(","))
+                opcode = 1
+                print("set bits: {}".format(bits))
+            elif opt == '-c':
+                bits = list(arg.split(","))
+                opcode = 2
+                print("clear bits: {}".format(bits))
 
-num = int(str(arg),base)
+except getopt.GetoptError:
+    print ('usage: bits.py -{b,o,x,d,s,c} <value>')
+    sys.exit(-1)
+
+num = int(str(tmp),base)
+
+for b in bits:
+    if opcode == 1:
+        num = num | (1 << int(b))
+    elif opcode == 2:
+        num = num ^ (1 << int(b))
+
 val = num
 
 # check for MAX
@@ -71,9 +95,12 @@ output = output[::-1]
 for x in range(32):
     formated = formated + output[x] + "  "
 # ..and print
+print
 print(" ===============================================================================================")
 print(" DEC: {:d}, HEX: {:x}, OCT: {:o}, BIN: {:b}".format(val, val, val, val))
 print(" ===============================================================================================")
 print(" 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0")
 print( formated )
 print(" ===============================================================================================")
+print
+
