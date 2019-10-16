@@ -1,21 +1,41 @@
 #!/usr/bin/python
+#
+#   Copyright 2019 Vitaly Rodionov
+#   Author: Vitaly Rodionov <vitaly.rodionov@gmail.com>
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+
 import sys
 import getopt
 
+argv = sys.argv[1:]
+num = 0
 MAX = 0xffffffff
 output = ""
 formated = "  "
-argv = sys.argv[1:]
-num = 0
+
 
 try:
-    # Define the getopt parameters
-    opts, args = getopt.getopt(argv, 'b:o:x:d', ['bin', 'oct', 'hex', 'dec'])
-    # Check if the options' length is 2 (can be enhanced)
-    if len(opts) == 0 and len(opts) > 1:
-      print ('usage: add.py -a <first_operand> -b <second_operand>')
+    # define the getopt parameters
+    opts, args = getopt.getopt(argv, 'b:o:x:d:', ['bin', 'oct', 'hex', 'dec'])
+    # check parameters
+    if len(opts) == 0 or len(opts) > 1:
+      print ('usage: mbits.py -{b,o,x,d} <value>')
     else:
-      # Iterate the options and get the corresponding values
+      # iterate the options and get the corresponding values
       for opt, arg in opts:
         if opt == '-b':
             num = int(str(arg),2)
@@ -24,14 +44,14 @@ try:
         elif opt == '-x':
             num = int(str(arg),16)
         elif opt == '-d':
-            num = int(str(arg),10)
+            num = int(arg)
 
 except getopt.GetoptError:
-    # Print something useful
-    print ('usage: add.py -a <first_operand> -b <second_operand>')
+    print ('usage: mbits.py -{b,o,x,d} <value>')
     sys.exit(2)
 
 val = num
+
 # check for MAX
 if num > MAX:
     print("No more then 32 bits, please.")
@@ -45,13 +65,13 @@ output = output[::-1]
 # add missing bits
 while len(output)<32:
     output = output + "0"
-#reverse back
+# reverse back
 output = output[::-1]
 # format
 for x in range(32):
     formated = formated + output[x] + "  "
-
-# print
+# ..and print
+print(" ===============================================================================================")
 print(" DEC: {:d}, HEX: {:x}, OCT: {:o}, BIN: {:b}".format(val, val, val, val))
 print(" ===============================================================================================")
 print(" 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0")
