@@ -52,16 +52,16 @@ try:
                 tmp = arg
 
     num = int(str(tmp),base)
-
+    print
     for opt, arg in opts:
         if opt == '-s':
             sbits = list(arg.split(","))
-            print("Set bits: {}".format(sbits))
+            print(" Set bits {}".format(sbits))
             for b in sbits:
                 num = num | (1 << int(b))
         elif opt == '-c':
             cbits = list(arg.split(","))
-            print("Clr bits: {}".format(cbits))
+            print(" Clr bits {}".format(cbits))
             for b in cbits:
                 num = num & ~(1 << int(b))
 
