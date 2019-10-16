@@ -32,14 +32,11 @@ sbits = list()
 cbits = list()
 
 try:
-    # define the getopt parameters
     opts, args = getopt.getopt(argv, 'b:o:x:d:s:c:', ['bin', 'oct', 'hex', 'dec', 'set', 'clear'])
-    # check parameters
     if len(opts) == 0 or len(opts) > 3:
         print ('usage: bits.py -{b,o,x,d,s,c} <value>')
         sys.exit(-1)
     else:
-        # iterate the options and get the corresponding values
         for opt, arg in opts:
             if opt == '-b':
                 base = 2
@@ -59,46 +56,43 @@ try:
     for opt, arg in opts:
         if opt == '-s':
             sbits = list(arg.split(","))
-            print("set bits: {}".format(sbits))
+            print("Set bits: {}".format(sbits))
             for b in sbits:
                 num = num | (1 << int(b))
         elif opt == '-c':
             cbits = list(arg.split(","))
-            print("clr bits: {}".format(cbits))
+            print("Clr bits: {}".format(cbits))
             for b in cbits:
                 num = num & ~(1 << int(b))
+
+    val = num
+
+    if num > MAX:
+        print("No more then 32 bits, please.")
+        exit(-1)
+
+    while num > 0:
+        output = str((num%2)) + output
+        num = (num/2)
+
+    output = output[::-1]
+
+    while len(output)<32:
+        output = output + "0"
+
+    output = output[::-1]
+
+    for x in range(32):
+        formated = formated + output[x] + "  "
+
+    print(" ===============================================================================================")
+    print(" DEC: {:d}, HEX: {:x}, OCT: {:o}, BIN: {:b}".format(val, val, val, val))
+    print(" ===============================================================================================")
+    print(" 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0")
+    print( formated )
+    print(" ===============================================================================================")
+    print
 
 except getopt.GetoptError:
     print ('usage: bits.py -{b,o,x,d,s,c} <value>')
     sys.exit(-1)
-
-val = num
-
-# check for MAX
-if num > MAX:
-    print("No more then 32 bits, please.")
-    exit(-1)
-# convert to binary form
-while num>0:
-    output = str((num%2)) + output
-    num = (num/2)
-# reverse
-output = output[::-1]
-# add missing bits
-while len(output)<32:
-    output = output + "0"
-# reverse back
-output = output[::-1]
-# format
-for x in range(32):
-    formated = formated + output[x] + "  "
-# ..and print
-print
-print(" ===============================================================================================")
-print(" DEC: {:d}, HEX: {:x}, OCT: {:o}, BIN: {:b}".format(val, val, val, val))
-print(" ===============================================================================================")
-print(" 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0")
-print( formated )
-print(" ===============================================================================================")
-print
-
