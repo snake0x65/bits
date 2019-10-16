@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 
 MAX = 0xffffffff
 output = ""
