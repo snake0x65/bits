@@ -25,17 +25,17 @@ argv = sys.argv[1:]
 num = 0
 tmp = 0
 base = 10
-opcode = 0
 MAX = 0xffffffff
 output = ""
 formated = "  "
-bits = list()
+sbits = list()
+cbits = list()
 
 try:
     # define the getopt parameters
     opts, args = getopt.getopt(argv, 'b:o:x:d:s:c:', ['bin', 'oct', 'hex', 'dec', 'set', 'clear'])
     # check parameters
-    if len(opts) == 0 or len(opts) > 2:
+    if len(opts) == 0 or len(opts) > 3:
         print ('usage: bits.py -{b,o,x,d,s,c} <value>')
         sys.exit(-1)
     else:
@@ -53,26 +53,24 @@ try:
             elif opt == '-d':
                 base = 10
                 tmp = arg
-            elif opt == '-s':
-                bits = list(arg.split(","))
-                opcode = 1
-                print("set bits: {}".format(bits))
-            elif opt == '-c':
-                bits = list(arg.split(","))
-                opcode = 2
-                print("clear bits: {}".format(bits))
+
+    num = int(str(tmp),base)
+
+    for opt, arg in opts:
+        if opt == '-s':
+            sbits = list(arg.split(","))
+            print("set bits: {}".format(sbits))
+            for b in sbits:
+                num = num | (1 << int(b))
+        elif opt == '-c':
+            cbits = list(arg.split(","))
+            print("clr bits: {}".format(cbits))
+            for b in cbits:
+                num = num & ~(1 << int(b))
 
 except getopt.GetoptError:
     print ('usage: bits.py -{b,o,x,d,s,c} <value>')
     sys.exit(-1)
-
-num = int(str(tmp),base)
-
-for b in bits:
-    if opcode == 1:
-        num = num | (1 << int(b))
-    elif opcode == 2:
-        num = num ^ (1 << int(b))
 
 val = num
 
