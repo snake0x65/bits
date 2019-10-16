@@ -23,33 +23,33 @@ import getopt
 
 argv = sys.argv[1:]
 num = 0
+base = 10
 MAX = 0xffffffff
 output = ""
 formated = "  "
-
 
 try:
     # define the getopt parameters
     opts, args = getopt.getopt(argv, 'b:o:x:d:', ['bin', 'oct', 'hex', 'dec'])
     # check parameters
     if len(opts) == 0 or len(opts) > 1:
-      print ('usage: mbits.py -{b,o,x,d} <value>')
+      print ('usage: bits.py -{b,o,x,d} <value>')
     else:
       # iterate the options and get the corresponding values
       for opt, arg in opts:
         if opt == '-b':
-            num = int(str(arg),2)
+            base= 2
         elif opt == '-o':
-            num = int(str(arg),8)
+            base = 8
         elif opt == '-x':
-            num = int(str(arg),16)
+            base = 16
         elif opt == '-d':
-            num = int(arg)
-
+            base = 10
 except getopt.GetoptError:
-    print ('usage: mbits.py -{b,o,x,d} <value>')
+    print ('usage: bits.py -{b,o,x,d} <value>')
     sys.exit(2)
 
+num = int(str(arg),base)
 val = num
 
 # check for MAX
