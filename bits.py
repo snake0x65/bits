@@ -31,12 +31,21 @@ formated = "  "
 sbits = list()
 cbits = list()
 
+def Usage():
+    print ('Usage: bits.py -{b,o,x,d,i} <value> -{s,c) <bit,bit,bit,...>')
+    print ('Example: bits.py -x FF00FF00 -s 0,1,2 -c 31,24,6')
+    print ('         bits.py -d 200 -s 0,1,2,17 -c 31,24,6')
+    print ('         bits.py -b 10100001110  -s 0,1,2 -c 31,24,6')
+    sys.exit(-1)
+
+def Error():
+    print("Error in params")
+    sys.exit(-3)
+
 try:
     opts, args = getopt.getopt(argv, 'b:o:x:d:s:c:', ['bin', 'oct', 'hex', 'dec', 'set', 'clear'])
     if len(opts) == 0 or len(opts) > 3:
-        print ('Usage: bits.py -{b,o,x,d} <value> -{s,c) <bit,bit,bit,...>')
-        print ('Example: bits.py -x FF00FF00 -s 0,1,2 -c 31,24,6')
-        sys.exit(-1)
+        Usage()
     else:
         for opt, arg in opts:
             if opt == '-b':
@@ -51,6 +60,8 @@ try:
             elif opt == '-d':
                 base = 10
                 tmp = arg
+            elif opt == '-h':
+                Usage()
 
     num = int(str(tmp),base)
     print
@@ -59,11 +70,15 @@ try:
             sbits = list(arg.split(","))
             print(" Set bits {}".format(sbits))
             for b in sbits:
+                if int(b) > 31:
+                    Error()
                 num = num | (1 << int(b))
         elif opt == '-c':
             cbits = list(arg.split(","))
             print(" Clr bits {}".format(cbits))
             for b in cbits:
+                if int(b) > 31:
+                    Error()
                 num = num & ~(1 << int(b))
 
     val = num
@@ -95,5 +110,4 @@ try:
     print
 
 except getopt.GetoptError:
-    print ('usage: bits.py -{b,o,x,d,s,c} <value>')
-    sys.exit(-1)
+    Usage()
